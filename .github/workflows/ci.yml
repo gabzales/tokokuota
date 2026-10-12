@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+
+    env:
+      # libpq variables: used by psql in the SQL test runner
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      NEXT_TELEMETRY_DISABLED: "1"
+      # real-PostgreSQL TypeScript tests (tests/db) run against this scratch database
+      TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/tk_app
+      REQUIRE_DB_TESTS: "1"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: SQL behaviour + concurrency tests (scratch databases)
+        run: PSQL="psql" ./supabase/tests/run.sh
+
+      - name: Prepare scratch database for the TypeScript DB tests
+        run: |
+          psql -v ON_ERROR_STOP=1 -d postgres -c "create database tk_app"
+          psql -v ON_ERROR_STOP=1 -q -d tk_app -f supabase/tests/00_supabase_stub.sql
+          for m in supabase/migrations/*.sql; do psql -v ON_ERROR_STOP=1 -q -d tk_app -f "$m"; done
+          # the DB tests insert users directly; the invite gate (0007) is covered by supabase/tests/16
+          psql -v ON_ERROR_STOP=1 -q -d tk_app -c "alter table auth.users disable trigger enforce_invite_on_signup"
+
+      - name: Unit + real-PostgreSQL tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      # Informational: a high-severity advisory in a build-time dependency should not block a deploy,
+      # but it must be visible. Review it and upgrade when a fixed release exists.
+      - name: Dependency audit (production dependencies)
+        run: npm audit --omit=dev --audit-level=high
+        continue-on-error: true

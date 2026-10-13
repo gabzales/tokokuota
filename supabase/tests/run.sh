@@ -19,4 +19,5 @@ $PSQL -X -q -At -d tk_test -f supabase/tests/14_hardening_tests.sql
 $PSQL -X -q -At -d tk_test -f supabase/tests/15_ops_tests.sql
 $PSQL -X -q -At -d tk_test -f supabase/tests/16_invite_tests.sql
 $PSQL -X -q -At -d tk_test -f supabase/tests/17_bootstrap_tests.sql
+$PSQL -X -q -At -d tk_test -f supabase/tests/18_diagnostics_tests.sql
 PSQL="$PSQL" DB=tk_conc bash supabase/tests/20_concurrency.sh

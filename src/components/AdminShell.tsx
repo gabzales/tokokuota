@@ -10,6 +10,7 @@ const ITEMS: NavItem[] = [
   { href: "/admin/transactions", label: "Transaksi" },
   { href: "/admin/users", label: "User" },
   { href: "/admin/invites", label: "Kode Undangan" },
+  { href: "/admin/diagnostik", label: "Diagnostik" },
   { href: "/admin/topups", label: "Top-up" },
   { href: "/admin/banks", label: "Rekening Top-up" },
   { href: "/admin/products", label: "Produk & Margin" },

@@ -9,6 +9,7 @@ export const LIMITS = {
   loginEmail:  { scope: "login:email",  limit: 8,  windowSeconds: 600 },
   registerIp:  { scope: "register:ip",  limit: 5,  windowSeconds: 3600 },
   setupIp:     { scope: "setup:ip",     limit: 5,  windowSeconds: 3600 },
+  diagAdmin:   { scope: "diag:admin",   limit: 40, windowSeconds: 300 },
   forgotIp:    { scope: "forgot:ip",    limit: 10, windowSeconds: 3600 },
   forgotEmail: { scope: "forgot:email", limit: 3,  windowSeconds: 3600 },
   topupCreate: { scope: "topup:user",   limit: 10, windowSeconds: 3600 },

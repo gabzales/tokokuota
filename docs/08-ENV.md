@@ -58,7 +58,7 @@ Kalau dua variabel Telegram kosong, alert tidak dikirim (tidak error).
 
 | Nama | Apa itu | Kenapa dikosongkan |
 |---|---|---|
-| `KHFYPAY_BASE_URL`, `KHFYPAY_API_KEY`, `KHFYPAY_TIMEOUT_MS` | Alamat, kunci, dan batas waktu untuk menghubungi KhfyPay. `KHFYPAY_BASE_URL=https://panel.khfy-store.com/api_v2` (sudah termasuk `/api_v2`, tanpa garis miring di akhir; `/api_v3/cek_stock_akrab` otomatis diarahkan dari host-nya) | Diisi hanya setelah Tahap 2B selesai. Kalau diisi sekarang, setiap pembelian sungguhan dikirim ke KhfyPay padahal hasilnya belum bisa dibaca aman. Selama kosong, aplikasi tetap jalan dan pembelian gagal *sebelum* saldo dipotong |
+| `KHFYPAY_BASE_URL`, `KHFYPAY_API_KEY`, `KHFYPAY_TIMEOUT_MS` | Alamat, kunci, dan batas waktu untuk menghubungi KhfyPay. `KHFYPAY_BASE_URL=https://panel.khfy-store.com/api_v2` (boleh diisi sekarang, hanya dipakai tes Diagnostik dan belum ada produk yang bisa dibeli; sudah termasuk `/api_v2`, tanpa garis miring di akhir; `/api_v3/cek_stock_akrab` otomatis diarahkan dari host-nya) | Diisi hanya setelah Tahap 2B selesai. Kalau diisi sekarang, setiap pembelian sungguhan dikirim ke KhfyPay padahal hasilnya belum bisa dibaca aman. Selama kosong, aplikasi tetap jalan dan pembelian gagal *sebelum* saldo dipotong |
 
 ## Yang BUKAN env var (diatur di dashboard admin)
 Margin default produk baru, mode pemeliharaan, pengumuman, batas top-up, masa berlaku top-up, dan nomor rekening

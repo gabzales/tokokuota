@@ -36,12 +36,13 @@ npm run dev                                   # buka http://localhost:3000
 Halaman depan, syarat, dan privasi jalan tanpa env. Login, katalog, dan admin butuh project Supabase (migrasi di bawah) dan env terisi.
 
 ### Database (Supabase)
-Jalankan file di `supabase/migrations/` **berurutan** (0001 sampai 0008) di SQL Editor Supabase, atau pakai `supabase db push`. Cara tercepat: tempel isi `supabase/ALL_MIGRATIONS.sql` (gabungan semuanya) sekali di SQL Editor lalu Run. Jangan dijalankan dua kali. Kalau sudah terlanjur error/jalan sebagian di project yang masih kosong: Run `supabase/00_RESET_DB.sql` (menghapus semua tabel di schema public), lalu `ALL_MIGRATIONS.sql` lagi.
+Jalankan file di `supabase/migrations/` **berurutan** (0001 sampai 0009) di SQL Editor Supabase, atau pakai `supabase db push`. Cara tercepat: tempel isi `supabase/ALL_MIGRATIONS.sql` (gabungan semuanya) sekali di SQL Editor lalu Run. Jangan dijalankan dua kali. Kalau sudah terlanjur error/jalan sebagian di project yang masih kosong: Run `supabase/00_RESET_DB.sql` (menghapus semua tabel di schema public), lalu `ALL_MIGRATIONS.sql` lagi.
 **Admin pertama (tanpa SQL Editor):** pendaftaran biasa hanya dengan kode undangan (migrasi 0007), jadi admin pertama dibuat lewat halaman setup sekali pakai:
 1. Di Vercel isi env `SETUP_SECRET` (acak, minimal 24 karakter, lihat `docs/08-ENV.md`), lalu deploy ulang.
 2. Buka `https://<domain>/setup`, isi secret, email, dan password admin, lalu klik **Buat admin**.
 3. Login di `/login` (admin wajib MFA/TOTP: siapkan aplikasi authenticator). Setelah itu halaman `/setup` hilang sendiri (404); **hapus `SETUP_SECRET` dari Vercel**.
 4. Seterusnya kode undangan dibuat dari Admin → Kode Undangan.
+5. Admin → **Diagnostik**: tes koneksi langsung dari web (environment, Supabase + migrasi, KhfyPay, webhook) dengan kode error, saran perbaikan, detail mentah, dan log. Tombol "Salin laporan lengkap" untuk dikirim ke developer.
 
 Di Supabase → Authentication → URL configuration: isi Site URL dan tambahkan `https://<domain>/auth/callback` ke Redirect URLs.
 Pasang SMTP sendiri sebelum ada user nyata (pengirim email bawaan sangat terbatas).
@@ -62,7 +63,7 @@ Pasang SMTP sendiri sebelum ada user nyata (pengirim email bawaan sangat terbata
 ```bash
 npm run typecheck && npm run lint && npm test && npm run build
 PSQL="psql -U postgres" ./supabase/tests/run.sh   # tes SQL + concurrency di Postgres lokal (bukan project Supabase kamu)
-TEST_DATABASE_URL=postgres://… npm run test:db    # tes TypeScript ke PostgreSQL asli (migrasi 0001..0008 sudah diterapkan)
+TEST_DATABASE_URL=postgres://… npm run test:db    # tes TypeScript ke PostgreSQL asli (migrasi 0001..0009 sudah diterapkan)
 ```
 Pengecekan yang sama berjalan otomatis di `.github/workflows/ci.yml`.
 

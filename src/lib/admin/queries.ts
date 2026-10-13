@@ -149,3 +149,24 @@ export async function listInvites(limit = 100) {
   if (error) throw new Error(`invite_codes read failed: ${error.message}`);
   return (data ?? []) as InviteRow[];
 }
+
+export interface DiagLogRow {
+  id: number; created_at: string; check_id: string; status: string; code: string;
+  http_status: number | null; latency_ms: number | null; summary: string; detail: string | null;
+}
+/** null = table missing (migration 0009 not run yet) or unreadable. */
+export async function listDiagLogs(limit = 40): Promise<DiagLogRow[] | null> {
+  const { data, error } = await createAdminClient().from("diagnostic_logs")
+    .select("id,created_at,check_id,status,code,http_status,latency_ms,summary,detail").order("id", { ascending: false }).limit(limit);
+  return error ? null : ((data ?? []) as DiagLogRow[]);
+}
+
+export interface WebhookPayloadRow {
+  id: number; first_received_at: string; last_received_at: string; receive_count: number;
+  outcome: string | null; reff_id: string | null; payload: unknown;
+}
+export async function listWebhookPayloads(limit = 20): Promise<WebhookPayloadRow[] | null> {
+  const { data, error } = await createAdminClient().from("provider_webhook_events")
+    .select("id,first_received_at,last_received_at,receive_count,outcome,reff_id,payload").order("last_received_at", { ascending: false }).limit(limit);
+  return error ? null : ((data ?? []) as WebhookPayloadRow[]);
+}

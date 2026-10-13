@@ -78,3 +78,7 @@ Indexes cover: user history (`transactions`, `balance_ledger` by user + time), p
 - `setup_needed()`, `bootstrap_admin_invite()`, `bootstrap_promote_admin(uuid)` (service_role only). The `/setup` page (env `SETUP_SECRET`) mints a 10-minute invite, creates the user through the Auth admin API with that invite (so the 0007 gate still applies), then promotes it.
 - Both bootstrap functions take one advisory lock and refuse once any admin exists: parallel setups cannot create two admins; the loser's account is deleted by the app.
 - Tests: `supabase/tests/17_bootstrap_tests.sql` (runs in a rolled-back transaction).
+
+## Migration 0009 (diagnostics log)
+- `diagnostic_logs` (RLS on, no policies; service_role select only). Written only by `admin_log_diagnostic` (admin re-checked, field lengths enforced in SQL, newest 300 rows kept). The app redacts secrets before calling it. Also grants service_role `select` on `provider_webhook_events` for the Diagnostik page.
+- Tests: `supabase/tests/18_diagnostics_tests.sql`.

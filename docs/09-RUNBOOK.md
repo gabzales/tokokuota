@@ -42,3 +42,6 @@ Aktifkan backup harian dan **PITR** di Supabase (paket berbayar) sebelum ada sal
 
 ## 10. Provider gangguan
 Nyalakan mode pemeliharaan, pantau Admin → Monitoring. Transaksi yang sudah terkirim tetap PENDING sampai konfirmasi valid. Jangan kirim ulang manual.
+
+## Tes koneksi cepat (Admin → Diagnostik)
+Jalankan "Jalankan semua tes". Kode yang paling sering muncul: `ENV_INVALID` (env salah/tertukar, perbaiki di Vercel lalu redeploy), `SB_MIGRATION_MISSING` (migrasi kurang), `SB_BAD_KEY` (service role key salah), `NET_DNS`/`NET_TIMEOUT` (alamat salah atau diblokir), `HTTP_401/403` (API key salah atau IP belum di-whitelist di KhfyPay), `WEBHOOK_BLOCKED_BY_PLATFORM` (Vercel Deployment Protection aktif). Setiap hasil juga tercatat sebagai satu baris JSON `{"evt":"diagnostic",...}` di Vercel → Logs.

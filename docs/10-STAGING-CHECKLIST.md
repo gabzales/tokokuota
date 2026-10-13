@@ -2,19 +2,20 @@
 
 ## A. Supabase (project staging)
 - [ ] Buat project; pilih region dekat (mis. Singapura). Catat URL, anon key, service_role key.
-- [ ] SQL Editor: jalankan `supabase/migrations/0001` sampai `0008` **berurutan**, tanpa error.
+- [ ] SQL Editor: jalankan `supabase/migrations/0001` sampai `0009` **berurutan**, tanpa error.
 - [ ] Authentication → URL configuration: Site URL = alamat staging; Redirect URLs += `https://<staging>/auth/callback`.
 - [ ] Authentication → SMTP: pasang SMTP sendiri (pengirim bawaan sangat terbatas) dan tes kirim.
 - [ ] Authentication → MFA: pastikan TOTP aktif.
 - [ ] Vercel env `SETUP_SECRET` terisi (acak ≥ 24 karakter) lalu redeploy; buka `/setup`, buat admin pertama (email + password). Tes juga: secret salah ditolak; setelah admin jadi `/setup` menjadi 404.
 - [ ] Hapus `SETUP_SECRET` dari Vercel setelah admin jadi.
+- [ ] Admin → **Diagnostik** → "Jalankan semua tes": semua LULUS (KhfyPay boleh DILEWATI jika belum diisi). Tes yang GAGAL menampilkan kode, saran, dan detail mentah; klik "Salin laporan lengkap" untuk dikirim ke developer.
 - [ ] Tes gerbang pendaftaran: daftar tanpa kode ditolak; kode yang sama dipakai dua kali ditolak; kode kedaluwarsa/dicabut ditolak; panggilan langsung ke Supabase Auth `signUp` tanpa kode juga ditolak.
 - [ ] Admin → Kode Undangan: buat kode, salin, cabut kode yang belum dipakai.
 
 ## B. Vercel
 - [ ] Import repo; framework Next.js; pilih region fungsi yang dekat dengan Supabase.
 - [ ] Environment Variables (lihat docs/08-ENV.md): 3 kunci Supabase, `NEXT_PUBLIC_SITE_URL`, `WEBHOOK_SECRET`, `CRON_SECRET`; opsional `TELEGRAM_*`.
-- [ ] **JANGAN isi `KHFYPAY_*`.**
+- [ ] `KHFYPAY_BASE_URL` (`https://panel.khfy-store.com/api_v2`) dan `KHFYPAY_API_KEY` BOLEH diisi sekarang: katalog masih kosong (parser belum ada) sehingga belum ada produk yang bisa dibeli, dan tes Diagnostik hanya membaca (tidak pernah memanggil `/trx`). Jangan aktifkan `RECONCILE_ENABLED`.
 - [ ] Deploy; buka URL; cek `/api/health` = `{"ok":true}`.
 
 ## C. Uji manual (buka DevTools → Console; tidak boleh ada error CSP)

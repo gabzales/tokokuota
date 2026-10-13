@@ -15,6 +15,7 @@ Stack: Next.js 15 (App Router) + React 19 + TypeScript + Tailwind 3 + Supabase (
 | Admin MFA (TOTP/aal2), profil, lupa/reset password | selesai di kode, belum diuji di Supabase asli |
 | Pendaftaran hanya dengan kode undangan (0007: trigger di `auth.users`, kode sekali pakai + kedaluwarsa, halaman Admin → Kode Undangan) | selesai + teruji di DB; belum diuji di Supabase asli |
 | Admin pertama dari browser: halaman `/setup` sekali pakai (env `SETUP_SECRET`, 404 bila env kosong atau admin sudah ada; migrasi 0008) | selesai + teruji di DB; belum diuji di Supabase asli |
+| Admin → Diagnostik: tes env / Supabase+migrasi / KhfyPay (cek_stock_akrab, history, list_product, hanya baca) / webhook loopback; kode error, saran, detail mentah, log (tabel `diagnostic_logs`, migrasi 0009) + 20 pesan webhook terakhir | selesai + teruji unit; belum diuji dengan Supabase/KhfyPay asli |
 | Top-up otomatis sisi aplikasi (permintaan nominal unik, instruksi, antrian review, konfirmasi admin, batas kredit harian admin) | selesai + teruji di DB |
 | Landing page + animasi + validasi form client-side | selesai; sudah dilihat pemilik di localhost (login + landing lama) |
 | Rate limit (Postgres), security headers, CI workflow | selesai; CSP belum diuji di browser nyata; CI belum pernah jalan di GitHub |
@@ -33,11 +34,11 @@ npm run dev                  # atau npm run dev:turbo (lebih cepat saat kompilas
 ```
 Kualitas: `npm run typecheck && npm run lint && npm test && npm run build`.
 SQL + concurrency (butuh Postgres lokal, BUKAN project Supabase asli): `PSQL="psql -U postgres" ./supabase/tests/run.sh`.
-Tes TypeScript ke Postgres asli: terapkan migrasi 0001..0008 + `supabase/tests/00_supabase_stub.sql` ke DB scratch, matikan gerbang undangan di DB scratch itu (`alter table auth.users disable trigger enforce_invite_on_signup`, karena tes membuat user langsung), lalu `TEST_DATABASE_URL=... npm run test:db`. Pipeline yang sama ada di `.github/workflows/ci.yml`.
+Tes TypeScript ke Postgres asli: terapkan migrasi 0001..0009 + `supabase/tests/00_supabase_stub.sql` ke DB scratch, matikan gerbang undangan di DB scratch itu (`alter table auth.users disable trigger enforce_invite_on_signup`, karena tes membuat user langsung), lalu `TEST_DATABASE_URL=... npm run test:db`. Pipeline yang sama ada di `.github/workflows/ci.yml`.
 
 ## 4. Peta kode (ringkas)
 ```
-supabase/migrations/0001..0008   skema, RLS, RPC (sumber kebenaran logika uang)
+supabase/migrations/0001..0009   skema, RLS, RPC (sumber kebenaran logika uang)
 supabase/tests/                  SQL behavior (10..15), concurrency (20_concurrency.sh), stub Supabase
 src/lib/providers/               ProviderAdapter + khfypay/ (wire.ts, request-builder, http, parsers [TODO], webhook [TODO status])
 src/lib/transactions/            rpc wrappers, checkout (sendIfClaimed), webhook-processor, reconcile (dimatikan), policy
